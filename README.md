@@ -1,6 +1,6 @@
 # nablaman
 
-A terminal theme for ZSH (to be used with Oh My Zsh).
+A prompt theme for ZSH (to be used with Oh My Zsh).
 
 ![A screenshot of the nablaman theme.](screenshot.png)
 
