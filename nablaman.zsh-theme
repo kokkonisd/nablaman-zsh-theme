@@ -13,14 +13,14 @@
 # It is recommended that you use Monokai dark as a color profile (or similar).
 
 # Display the "terminator" (i.e. `$`-equivalent).
-terminator() {
+nablaman_terminator() {
     echo "%F{166}∇%f" 
 }
 
 # Display a segment of the prompt given a background and a foreground color.
-segment() {
+nablaman_segment() {
     if [[ $# != 3 ]]; then
-        echo "ERROR: wrong syntax for \`segment\` call."
+        echo "ERROR: wrong syntax for \`nablaman_segment\` call."
         echo "\texpected \`segment <background color code> <foreground color code> <text>\`."
         exit 1
     fi
@@ -28,19 +28,19 @@ segment() {
 }
 
 # Set up the info segments.
-info_segments() {
+nablaman_info_segments() {
     # Base symbol.
     echo -n "%F{130}∴%f "
 
     # User & hostname.
-    segment 238 244 "%n@%m"
+    nablaman_segment 238 244 "%n@%m"
 
     # Path to current directory.
-    segment 208 235 "%B%~%b"
+    nablaman_segment 208 235 "%B%~%b"
 }
 
 # Set up the return code segment.
-return_code_segment() {
+nablaman_return_code_segment() {
     if [[ $? -eq 0 ]]; then
         echo -n "%F{040}⊨%f"
     else
@@ -49,7 +49,7 @@ return_code_segment() {
 }
 
 # Set up the git segment.
-git_segment() {
+nablaman_git_segment() {
     ZSH_THEME_GIT_PROMPT_UNTRACKED=" ⋄ "
     ZSH_THEME_GIT_PROMPT_ADDED=" ⊛ "
     ZSH_THEME_GIT_PROMPT_MODIFIED=" ∗ "
@@ -74,10 +74,10 @@ git_segment() {
         git_bg_color=94;
     fi
 
-    segment $git_bg_color $git_fg_color $prompt_info$prompt_status
+    nablaman_segment $git_bg_color $git_fg_color $prompt_info$prompt_status
 }
 
 
-RPROMPT=' $(return_code_segment)'
-PROMPT='$(info_segments)
-$(terminator)$(git_segment) '
+RPROMPT=' $(nablaman_return_code_segment)'
+PROMPT='$(nablaman_info_segments)
+$(nablaman_terminator)$(nablaman_git_segment) '
