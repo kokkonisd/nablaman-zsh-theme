@@ -70,10 +70,8 @@ git_segment() {
     git_fg_color=252
     git_bg_color=99
 
-    if [[ $(parse_git_dirty) == "$ZSH_THEME_GIT_PROMPT_DIRTY" ]]; then
+    if [[ -n $prompt_status ]]; then
         git_bg_color=94;
-    else
-        git_bg_color=99;
     fi
 
     segment $git_bg_color $git_fg_color $prompt_info$prompt_status
