@@ -47,9 +47,9 @@ nablaman_info_segments() {
 # Set up the return code segment.
 nablaman_return_code_segment() {
     if [[ $? -eq 0 ]]; then
-        echo -n "%F{040}⊨%f"
+        echo -n "%F{040}⊤%f"
     else
-        echo -n "%F{red}⊭%f"
+        echo -n "%F{red}⊥%f"
     fi
 }
 
