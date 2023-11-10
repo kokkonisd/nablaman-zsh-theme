@@ -27,13 +27,18 @@ nablaman_segment() {
     echo -n "%F{$1}◢%f%F{$2}%K{$1}$3%k%f%F{$1}◤%f"
 }
 
+# Set up the hostname segment of the prompt.
+nablaman_hostname_segment() {
+    # User & hostname.
+    nablaman_segment 238 244 "%n@%m"
+}
+
 # Set up the info segments.
 nablaman_info_segments() {
     # Base symbol.
     echo -n "%F{130}∴%f "
 
-    # User & hostname.
-    nablaman_segment 238 244 "%n@%m"
+    nablaman_hostname_segment
 
     # Path to current directory.
     nablaman_segment 208 235 "%B%~%b"

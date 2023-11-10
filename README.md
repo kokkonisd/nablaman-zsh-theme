@@ -21,3 +21,13 @@ ZSH_THEME="nablaman"
 ```
 
 It is recommended that you use Monokai dark or a similar terminal profile.
+
+
+## hiding/disabling username & hostname
+
+If you wish to hide the username & hostname info from the prompt, you can add this line
+in your `.zshrc`:
+
+```sh
+nablaman_hostname_segment(){}
+```
