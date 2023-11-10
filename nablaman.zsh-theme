@@ -55,18 +55,23 @@ nablaman_return_code_segment() {
 
 # Set up the git segment.
 nablaman_git_segment() {
-    ZSH_THEME_GIT_PROMPT_UNTRACKED=" ⋄ "
-    ZSH_THEME_GIT_PROMPT_ADDED=" ⊛ "
-    ZSH_THEME_GIT_PROMPT_MODIFIED=" ∗ "
+    ZSH_THEME_GIT_PROMPT_UNTRACKED="⋄ "
+    ZSH_THEME_GIT_PROMPT_ADDED="⊛ "
+    ZSH_THEME_GIT_PROMPT_MODIFIED="∗ "
     ZSH_THEME_GIT_PROMPT_PREFIX="⋔ "
     ZSH_THEME_GIT_PROMPT_SUFFIX=""
-    ZSH_THEME_GIT_PROMPT_DIRTY=""
-    ZSH_THEME_GIT_PROMPT_CLEAN=" "
+    # This is a little hack to let us differentiate between ZSH_THEME_GIT_PROMPT_DIRTY and
+    # ZSH_THEME_GIT_PROMPT_CLEAN. We want them both to be a single space, but they can't be equal,
+    # or else we won't be able to tell if the working tree is dirty or not. Hence,
+    # ZSH_THEME_GIT_PROMPT_CLEAN is set to an unbreakable space (0x00a0).
+    ZSH_THEME_GIT_PROMPT_DIRTY=" "
+    ZSH_THEME_GIT_PROMPT_CLEAN="\U00a0"
 
     local prompt_info git_fg_color git_bg_color
 
     prompt_info=$(git_prompt_info) 
     prompt_status=$(git_prompt_status)
+    git_dirty=$(parse_git_dirty)
 
     if [[ -z $prompt_info ]]; then
         return
@@ -75,7 +80,7 @@ nablaman_git_segment() {
     git_fg_color=252
     git_bg_color=99
 
-    if [[ -n $prompt_status ]]; then
+    if [[ "$git_dirty" == "$ZSH_THEME_GIT_PROMPT_DIRTY" ]]; then
         git_bg_color=94;
     fi
 
