@@ -20,6 +20,7 @@ You can then set the profile in your `.zshrc` file:
 ZSH_THEME="nablaman"
 ```
 
+It is **heavily recommended** to use Mono LGS Nerd Font, otherwise certain symbols might not work.
 It is recommended that you use Monokai dark or a similar terminal profile.
 
 

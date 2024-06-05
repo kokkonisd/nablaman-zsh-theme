@@ -19,12 +19,17 @@ nablaman_terminator() {
 
 # Display a segment of the prompt given a background and a foreground color.
 nablaman_segment() {
+    local bottom_right_triangle top_left_triangle
+    bottom_right_triangle="\uE0BA"
+    top_left_triangle="\uE0BC"
+
+
     if [[ $# != 3 ]]; then
         echo "ERROR: wrong syntax for \`nablaman_segment\` call."
         echo "\texpected \`segment <background color code> <foreground color code> <text>\`."
         exit 1
     fi
-    echo -n "%F{$1}◢%f%F{$2}%K{$1}$3%k%f%F{$1}◤%f"
+    echo -n "%F{$1}$bottom_right_triangle%f%F{$2}%K{$1}$3%k%f%F{$1}$top_left_triangle%f"
 }
 
 # Set up the hostname segment of the prompt.
