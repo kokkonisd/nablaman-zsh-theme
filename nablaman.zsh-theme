@@ -14,7 +14,7 @@
 
 # Display the "terminator" (i.e. `$`-equivalent).
 nablaman_terminator() {
-    echo "%F{166}∇%f" 
+    echo "%F{166}∇%f"
 }
 
 # Display a segment of the prompt given a background and a foreground color.
@@ -74,7 +74,7 @@ nablaman_git_segment() {
 
     local prompt_info git_fg_color git_bg_color
 
-    prompt_info=$(git_prompt_info) 
+    prompt_info=$(git_prompt_info)
     prompt_status=$(git_prompt_status)
     git_dirty=$(parse_git_dirty)
 
