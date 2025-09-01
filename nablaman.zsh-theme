@@ -70,7 +70,7 @@ nablaman_git_segment() {
         return
     fi
 
-    branch="$(git symbolic-ref --short HEAD)"
+    branch="$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD)"
     staged_changes="$( \
             git diff-index --cached HEAD -- 2>/dev/null \
             || git diff-index --cached "$empty_tree" -- \
