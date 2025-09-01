@@ -23,10 +23,8 @@ nablaman_segment() {
     bottom_right_triangle="\uE0BA"
     top_left_triangle="\uE0BC"
 
-
     if [[ $# != 3 ]]; then
-        echo "ERROR: wrong syntax for \`nablaman_segment\` call."
-        echo "\texpected \`segment <background color code> <foreground color code> <text>\`."
+        echo "ERROR: incorrect args to \`nablaman_segment(bg_color, fg_color, text)\`." 1>&2
         exit 1
     fi
     echo -n "%F{$1}$bottom_right_triangle%f%F{$2}%K{$1}$3%k%f%F{$1}$top_left_triangle%f"
@@ -60,36 +58,66 @@ nablaman_return_code_segment() {
 
 # Set up the git segment.
 nablaman_git_segment() {
-    ZSH_THEME_GIT_PROMPT_UNTRACKED="⋄ "
-    ZSH_THEME_GIT_PROMPT_ADDED="⊛ "
-    ZSH_THEME_GIT_PROMPT_MODIFIED="∗ "
-    ZSH_THEME_GIT_PROMPT_PREFIX="⋔ "
-    ZSH_THEME_GIT_PROMPT_SUFFIX=""
-    # This is a little hack to let us differentiate between ZSH_THEME_GIT_PROMPT_DIRTY and
-    # ZSH_THEME_GIT_PROMPT_CLEAN. We want them both to be a single space, but they can't be equal,
-    # or else we won't be able to tell if the working tree is dirty or not. Hence,
-    # ZSH_THEME_GIT_PROMPT_CLEAN is set to an unbreakable space (0x00a0).
-    ZSH_THEME_GIT_PROMPT_DIRTY=" "
-    ZSH_THEME_GIT_PROMPT_CLEAN="\U00a0"
+    local empty_tree fg_color bg_color branch staged_changes unstaged_changes untracked_changes \
+        segment dirty
 
-    local prompt_info git_fg_color git_bg_color
+    empty_tree="4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+    fg_color=252
+    bg_color=99
 
-    prompt_info=$(git_prompt_info)
-    prompt_status=$(git_prompt_status)
-    git_dirty=$(parse_git_dirty)
-
-    if [[ -z $prompt_info ]]; then
+    if ! git status &>/dev/null
+    then
         return
     fi
 
-    git_fg_color=252
-    git_bg_color=99
+    branch="$(git symbolic-ref --short HEAD)"
+    staged_changes="$( \
+            git diff-index --cached HEAD -- 2>/dev/null \
+            || git diff-index --cached "$empty_tree" -- \
+        )$( \
+            git submodule foreach --recursive --quiet \
+            git diff-index --cached HEAD -- 2>/dev/null \
+    )"
+    unstaged_changes="$( \
+            git diff-files \
+        )$( \
+            git submodule foreach --recursive --quiet \
+            git diff-files \
+    )"
+    untracked_changes="$( \
+            git ls-files --exclude-standard --others \
+        )$( \
+            git submodule foreach --recursive --quiet \
+            git ls-files --exclude-standard --others \
+    )"
 
-    if [[ "$git_dirty" == "$ZSH_THEME_GIT_PROMPT_DIRTY" ]]; then
-        git_bg_color=94;
+    segment="⋔ $branch"
+    dirty=0
+
+    if [[ -n $untracked_changes ]]
+    then
+        segment+=" ⋄"
+        dirty=1
     fi
 
-    nablaman_segment $git_bg_color $git_fg_color $prompt_info$prompt_status
+    if [[ -n $unstaged_changes ]]
+    then
+        segment+=" ∗"
+        dirty=1
+    fi
+
+    if [[ -n $staged_changes ]]
+    then
+        segment+=" ⊛"
+        dirty=1
+    fi
+
+    if [[ dirty -eq 1 ]]
+    then
+        bg_color=94
+    fi
+
+    nablaman_segment "$bg_color" "$fg_color" "$segment "
 }
 
 
