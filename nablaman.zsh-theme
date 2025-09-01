@@ -74,22 +74,11 @@ nablaman_git_segment() {
     staged_changes="$( \
             git diff-index --cached HEAD -- 2>/dev/null \
             || git diff-index --cached "$empty_tree" -- \
-        )$( \
-            git submodule foreach --recursive --quiet \
-            git diff-index --cached HEAD -- 2>/dev/null \
     )"
-    unstaged_changes="$( \
-            git diff-files \
-        )$( \
-            git submodule foreach --recursive --quiet \
-            git diff-files \
-    )"
-    untracked_changes="$( \
-            git ls-files --exclude-standard --others \
-        )$( \
-            git submodule foreach --recursive --quiet \
-            git ls-files --exclude-standard --others \
-    )"
+    unstaged_changes="$(git diff-files)"
+    untracked_changes="$(git ls-files --exclude-standard --others)"
+    other_changes="$(git status --porcelain)"
+
 
     segment="⋔ $branch"
     dirty=0
@@ -109,6 +98,11 @@ nablaman_git_segment() {
     if [[ -n $staged_changes ]]
     then
         segment+=" ⊛"
+        dirty=1
+    fi
+
+    if [[ (dirty -eq 0) && (-n $other_changes) ]]
+    then
         dirty=1
     fi
 
